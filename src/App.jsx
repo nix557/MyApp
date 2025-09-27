@@ -32,11 +32,85 @@ const KeyIcon = () => (
     </svg>
 );
 
+// Komponen untuk bubble chat
+const ChatBubble = ({ role, text, isLoading = false }) => {
+  const isUser = role === 'user';
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-start items-center space-x-4 p-2">
+        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center">
+          <BotIcon />
+        </div>
+        <div className="bg-gray-200 rounded-lg p-3 max-w-md md:max-w-xl lg:max-w-4xl">
+          <div className="animate-pulse flex space-x-2">
+            <div className="rounded-full bg-gray-400 h-2 w-2"></div>
+            <div className="rounded-full bg-gray-400 h-2 w-2"></div>
+            <div className="rounded-full bg-gray-400 h-2 w-2"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`flex items-start space-x-4 p-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
+      {!isUser && (
+        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center">
+          <BotIcon />
+        </div>
+      )}
+      <div className={`px-4 py-3 rounded-2xl max-w-md md:max-w-xl lg:max-w-4xl ${isUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
+        <p className="whitespace-pre-wrap">{text}</p>
+      </div>
+      {isUser && (
+        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+          <UserIcon />
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Komponen untuk input API Key
+const ApiKeyInput = ({ tempApiKey, setTempApiKey, handleApiKeySubmit }) => {
+  return (
+    <div className="font-sans h-screen w-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-6">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800">Masukkan Kunci API Gemini</h2>
+          <p className="text-gray-500 mt-2">Anda memerlukan kunci API untuk memulai.</p>
+        </div>
+        <form onSubmit={handleApiKeySubmit} className="space-y-4">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <KeyIcon />
+            </div>
+            <input
+              type="password"
+              value={tempApiKey}
+              onChange={(e) => setTempApiKey(e.target.value)}
+              placeholder="Masukkan Kunci API Anda di sini"
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300 transition-all duration-200"
+            disabled={!tempApiKey.trim()}
+          >
+            Simpan & Mulai Chat
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 
 // Komponen utama aplikasi
 export default function App() {
-  // State untuk menyimpan input pengguna, riwayat chat, status loading, dan error
-  const [userInput, setUserInput] = useState('');
+  const [input, setInput] = useState('');
   const [chatHistory, setChatHistory] = useState([
     {
       role: 'model',
@@ -45,16 +119,11 @@ export default function App() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // State untuk manajemen Kunci API
   const [apiKey, setApiKey] = useState('');
   const [isApiKeySet, setIsApiKeySet] = useState(false);
   const [tempApiKey, setTempApiKey] = useState('');
-
-  // Ref untuk auto-scroll ke pesan terbaru
   const chatEndRef = useRef(null);
 
-  // Cek local storage untuk API Key saat komponen dimuat
   useEffect(() => {
     const storedApiKey = localStorage.getItem('geminiApiKey');
     if (storedApiKey) {
@@ -63,12 +132,10 @@ export default function App() {
     }
   }, []);
 
-  // Fungsi untuk auto-scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatHistory, isLoading]);
 
-  // Fungsi untuk memanggil Gemini API
   const callGeminiAPI = async (history) => {
     setIsLoading(true);
     setError(null);
@@ -82,12 +149,10 @@ export default function App() {
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
     const formattedHistory = history.map(msg => ({
-      // Gemini mengharapkan 'user' dan 'model' sebagai peran
       role: msg.role === 'user' ? 'user' : 'model',
       parts: [{ text: msg.text }],
     }));
 
-    // Menyiapkan payload dengan tool google_search
     const payload = {
         contents: formattedHistory,
         tools: [{ "google_search": {} }],
@@ -124,7 +189,6 @@ export default function App() {
     }
   };
 
-  // Fungsi untuk menyimpan API Key
   const handleApiKeySubmit = (e) => {
     e.preventDefault();
     if (tempApiKey.trim()) {
@@ -135,129 +199,65 @@ export default function App() {
     }
   };
 
-  // Fungsi untuk menangani pengiriman pesan
-  const handleSendMessage = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!userInput.trim() || isLoading) return;
+    if (!input.trim() || isLoading) return;
 
-    const newUserMessage = { role: 'user', text: userInput };
+    const newUserMessage = { role: 'user', text: input };
     const updatedHistory = [...chatHistory, newUserMessage];
 
     setChatHistory(updatedHistory);
-    setUserInput('');
+    setInput('');
 
     callGeminiAPI(updatedHistory);
   };
 
-  // Komponen untuk bubble chat
-  const ChatBubble = ({ message }) => {
-    const isUser = message.role === 'user';
-    return (
-      <div className={`flex items-start gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}>
-        {!isUser && (
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-               <BotIcon />
-            </div>
-        )}
-        <div
-          className={`
-            max-w-md md:max-w-xl lg:max-w-4xl px-4 py-3 rounded-2xl shadow
-            ${isUser ? 'bg-blue-500 text-white rounded-br-none' : 'bg-white text-gray-800 rounded-bl-none'}
-          `}
-        >
-          <p className="text-sm whitespace-pre-wrap">{message.text}</p>
-        </div>
-         {isUser && (
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-               <UserIcon />
-            </div>
-        )}
-      </div>
-    );
-  };
-
-  // Render form API Key jika belum diatur
   if (!isApiKeySet) {
     return (
-        <div className="font-sans h-screen w-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-6">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-gray-800">Selamat Datang</h2>
-                    <p className="text-gray-500 mt-2">Silakan masukkan kunci API Google Gemini Anda untuk memulai.</p>
-                </div>
-                <form onSubmit={handleApiKeySubmit} className="space-y-4">
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <KeyIcon />
-                        </div>
-                        <input
-                            type="password"
-                            value={tempApiKey}
-                            onChange={(e) => setTempApiKey(e.target.value)}
-                            placeholder="Kunci API Gemini Anda"
-                            className="w-full p-3 pl-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                    >
-                        Simpan & Mulai Chat
-                    </button>
-                </form>
-                <p className="text-xs text-center text-gray-400">Kunci API Anda disimpan dengan aman di peramban Anda.</p>
-            </div>
-        </div>
+      <ApiKeyInput 
+        tempApiKey={tempApiKey}
+        setTempApiKey={setTempApiKey}
+        handleApiKeySubmit={handleApiKeySubmit}
+      />
     );
   }
 
-  // Render UI Chat utama
   return (
-    <div className="font-sans h-screen w-screen bg-gray-50 flex flex-col antialiased">
-      <header className="bg-white border-b border-gray-200 p-4 text-center shadow-sm">
-        <h1 className="text-xl font-bold text-gray-800">Asisten AI Cerdas</h1>
-        <p className="text-sm text-gray-500">Didukung oleh Gemini 2.5 Flash & Google Search</p>
+    <div className="flex flex-col h-screen bg-gray-50 text-gray-800 font-sans">
+      <header className="p-4 text-center border-b border-gray-200 bg-white shadow-sm sticky top-0 z-10">
+        <h1 className="text-2xl font-bold text-gray-800">Asisten AI Cerdas</h1>
       </header>
-      <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
-        {chatHistory.map((msg, index) => (
-          <ChatBubble key={index} message={msg} />
+
+      <main className="flex-grow p-4 overflow-y-auto pb-32">
+        {chatHistory.map((chat, index) => (
+          <ChatBubble key={index} role={chat.role} text={chat.text} />
         ))}
-        {isLoading && (
-          <div className="flex items-start gap-3 justify-start">
-             <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-               <BotIcon />
-            </div>
-            <div className="bg-white text-gray-800 rounded-2xl rounded-bl-none p-3 shadow">
-                <div className="flex items-center space-x-1">
-                    <span className="text-sm text-gray-500">AI sedang mengetik</span>
-                    <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse delay-75"></div>
-                    <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse delay-150"></div>
-                    <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse delay-300"></div>
-                </div>
-            </div>
-          </div>
-        )}
-        <div ref={chatEndRef} />
+        {isLoading && <ChatBubble role="model" isLoading={true} />}
+        <div ref={chatEndRef} /> 
       </main>
-      <footer className="bg-white border-t border-gray-200 p-2 md:p-4">
-        <form onSubmit={handleSendMessage} className="flex items-center gap-2 max-w-4xl mx-auto">
+
+      <div className="fixed bottom-0 left-0 right-0 w-full p-4 bg-white border-t border-gray-200 z-50">
+        <form onSubmit={handleSubmit} className="flex items-center space-x-4 max-w-4xl mx-auto">
           <input
             type="text"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Ketik pesan Anda di sini..."
-            className="flex-1 w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 text-sm"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ketik pesan Anda..."
+            className="flex-grow px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow disabled:bg-gray-100"
             disabled={isLoading}
+            autoFocus
+            style={{ WebkitUserSelect: 'text' }}
           />
           <button
             type="submit"
-            disabled={isLoading || !userInput.trim()}
-            className="bg-blue-500 text-white rounded-full p-3 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex-shrink-0"
+            className="bg-blue-600 text-white rounded-full p-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300 transition-all duration-200"
+            disabled={isLoading || !input.trim()}
           >
             <SendIcon />
           </button>
         </form>
-      </footer>
+      </div>
     </div>
   );
 }
+
