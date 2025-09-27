@@ -41,7 +41,7 @@ export default function App() {
       "background_color": "#f3f4f6", "theme_color": "#ffffff", "description": "Asisten AI Web menggunakan Gemini 2.5 Flash.",
       "icons": [
         {"src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik05NiAzMkM1OS4xNTggMzIgMjggNjMuMTU4IDI4IDExNEMyOCA0OS4zODUgOTYgMzIgOTYgMzJaIiBmaWxsPSIjNzdFNUZGIi8+CjxwYXRoIGQ9Ik0xNjQgODBDMTY0IDExNi44NDIgMTMzLjg0MiAxNDggOTcgMTQ4QzE3Mi42MTUgMTQ4IDE2NCA4MCAxNjQgODBaIiBmaWxsPSIjNzdFNUZGIi8+CjxwYXRoIGQ9Ik05Ni41IDE2MEMxMzMuMzQyIDE2MCAxNjQuNSAxMjguODQyIDE2NC41IDc4QzE2NC41IDE3NC42MTUgOTYuNSAxNjAgOTYuNSAxNjBaIiBmaWxsPSIjNzcxN0U1Ii8+CjxwYXRoIGQ9Ik0yOCAxMDRDNDQuNTk2IDExMy44NjEgNjcuNjQyIDExOS41IDk2IDExOS41QzEwMi42NzUgMTE5LjUgMTA5LjE0OCAxMTguOTA0IDExNS4zNDcgMTE3Ljk4NkMyOC44NjMgMTE4LjUgMjggMTA0IDI4IDEwNFoiIGZpbGw9IiM3NzE3RTUiLz4KPC9zdmc+Cg==", "sizes": "192x192", "type": "image/svg+xml"},
-        {"src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiAceliklebmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0yNTYgODVDMTU3Ljc1NiA4NSA4MCAxNjEuNzU2IDgwIDMwNEM4MCAxMzEuNjkzIDI1NiA4NSAyNTYgODVaIiBmaWxsPSIjNzdFNUZGIi8+CjxwYXRoIGQ9Ik00MzcuMzMzIDIxMy4zMzNDNDM3LjMzMyAzMTAuOTM5IDM1Ni45MzkgMzkyIDI1OC42NjcgMzkyQzQ2MC4zMDcgMzkyIDQzNy4zMzMgMjEzLjMzMyA0MzcuMzMzIDIxMy4zMzNaIiBmaWxsPSIjNzdFNUZGIi8+CjxwYXRoIGQ9Ik0yNTcuMzMzIDQyNi42NjdDNDU2LjkwOCA0MjYuNjY3IDQzOC42NjcgMzQxLjk3MyA0MzguNjY3IDIwOEM0MzguNjY3IDQ2NS42NDMgMjU3LjMzMyA0MjYuNjY3IDI1JULzMzMyA0MjYuNjY3WiIgZmlsbD0iIzc3MTdFNSIv+CjxwYXRoIGQ9Ik04MCAyNzcuMzMzQzExOC45MjMgMjkxLjg5NiAxNzguNzggMzA1LjMzMyAyNTYgMzA1LjMzM0MyNzMuODAxIDMwNS4zMzMgMjkxLjA2MSAzMDMuNzQ0IDMwNy41OTIgMzAwLjc2M0M3Ni45NjggMzAyIDgwIDI3Ny4zMzMgODAgMjc3LjMzM1oiIGZpbGw9IiM3NzE3RTUiLz4KPC9zdmc+Cg==", "sizes": "512x512", "type": "image/svg+xml"}
+        {"src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiAceliklebmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0yNTYgODVDMTU3Ljc1NiA4NSA4MCAxNjEuNzU2IDgwIDMwNEM4MCAxMzEuNjkzIDI1NiA4NSAyNTYgODVaIiBmaWxsPSIjNzdFNUZGIi8+CjxwYXRoIGQ9Ik00MzcuMzMzIDIxMy4zMzNDNDM3LjMzMyAzMTAuOTM5IDM1Ni45MzkgMzkyIDI1OC42NjcgMzkyQzQ2MC4zMDcgMzkyIDQzNy4zMzMgMjEzLjMzMyA0MzsuMzMzIDIxMy4zMzNaIiBmaWxsPSIjNzdFNUZGIi8+CjxwYXRoIGQ9Ik0yNTcuMzMzIDQyNi42NjdDNDU2LjkwOCA0MjYuNjY3IDQzOC42NjcgMzQxLjk3MyA0MzguNjY3IDIwOEM0MzguNjY3IDQ2NS42NDMgMjU3LjMzMyA0MjYuNjY3IDI1JULzMzMyA0MjYuNjY3WiIgZmlsbD0iIzc3MTdFNSIv+CjxwYXRoIGQ9Ik04MCAyNzcuMzMzQzExOC45MjMgMjkxLjg5NiAxNzguNzggMzA1LjMzMyAyNTYgMzA1LjMzM0MyNzMuODAxIDMwNS4zMzMgMjkxLjA2MSAzMDMuNzQ0IDMwNy41OTIgMzAwLjc2M0M3Ni45NjggMzAyIDgwIDI3Ny4zMzMgODAgMjc3LjMzM1oiIGZpbGw9IiM3NzE3RTUiLz4KPC9zdmc+Cg==", "sizes": "512x512", "type": "image/svg+xml"}
       ]
     };
     const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
@@ -59,7 +59,7 @@ export default function App() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  // --- Logika Inti ---
+  // --- Logika Inti (Tidak ada perubahan) ---
   const callGeminiAPI = async (prompt) => {
     if (!apiKey) {
       setError("API Key tidak ditemukan. Silakan masukkan API Key Anda.");
@@ -79,8 +79,6 @@ export default function App() {
       if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`); }
       const data = await response.json();
 
-      // --- PERBAIKAN DI SINI ---
-      // Mengurai respons dengan cara yang lebih aman untuk build tool
       const candidate = data.candidates && data.candidates[0];
       const modelResponse = candidate?.content?.parts?.[0]?.text;
 
@@ -141,7 +139,7 @@ export default function App() {
     );
   };
 
-  // --- Render (Struktur Layout Baru) ---
+  // --- Render (Tidak ada perubahan) ---
   return (
     <div className="font-sans h-full w-full bg-gray-100 grid grid-rows-[auto_1fr_auto] antialiased">
       {showApiModal && <ApiKeyModal />}
@@ -150,7 +148,6 @@ export default function App() {
         <h1 className="text-xl md:text-2xl font-bold text-gray-800 text-center">Asisten AI Gemini</h1>
       </header>
 
-      {/* Ini adalah area yang bisa di-scroll */}
       <main className="overflow-y-auto p-4 md:p-6 smooth-scroll">
         <div className="max-w-4xl mx-auto space-y-4">
           {messages.map((msg, index) => (<MessageBubble key={index} message={msg} />))}
@@ -167,13 +164,15 @@ export default function App() {
         </div>
       </main>
 
-      {/* Footer ini sekarang terkunci di bagian bawah grid */}
       <footer className="bg-white/80 backdrop-blur-lg p-4 md:p-6 border-t border-gray-200 z-10">
         <form onSubmit={handleSendMessage} className="max-w-4xl mx-auto">
           <div className="relative flex items-center">
             <input type="text" value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder={!apiKey ? "Masukkan API Key terlebih dahulu..." : (isLoading ? "Sedang menunggu respons..." : "Ketik pesan Anda...")} className="flex-1 w-full px-5 py-3 pr-14 bg-gray-100 border border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition" disabled={isLoading || !apiKey}/>
             <button type="submit" disabled={isLoading || !userInput.trim() || !apiKey} className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-blue-600 text-white rounded-full p-2 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform rotate-90" viewBox="http://www.w3.org/2000/svg" className="h-5 w-5 transform rotate-90" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+              {/* PERBAIKAN: Kode SVG yang sudah benar dan tidak duplikat */}
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform rotate-90" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+              </svg>
             </button>
           </div>
         </form>
