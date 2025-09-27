@@ -1,20 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* PEROMBAKAN: Aturan viewport yang lebih kuat dan ramah iOS */
-html {
-  height: -webkit-fill-available;
-}
-
-body, #root {
-  height: 100vh;
-  /* Fallback untuk browser lain */
-  height: -webkit-fill-available;
-  overflow: hidden;
-  position: relative;
-}
-
-.smooth-scroll {
-  -webkit-overflow-scrolling: touch;
-}
