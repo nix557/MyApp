@@ -124,6 +124,21 @@ export default function App() {
   const [tempApiKey, setTempApiKey] = useState('');
   const chatEndRef = useRef(null);
 
+  // --- MULAI PERBAIKAN ---
+  // Menghitung tinggi layar yang sebenarnya untuk mengatasi bug keyboard di seluler
+  useEffect(() => {
+    const setAppHeight = () => {
+      const doc = document.documentElement;
+      doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+    };
+    window.addEventListener('resize', setAppHeight);
+    setAppHeight(); // Atur tinggi awal saat komponen dimuat
+
+    // Membersihkan event listener saat komponen dilepas
+    return () => window.removeEventListener('resize', setAppHeight);
+  }, []);
+  // --- AKHIR PERBAIKAN ---
+
   useEffect(() => {
     const storedApiKey = localStorage.getItem('geminiApiKey');
     if (storedApiKey) {
@@ -223,7 +238,8 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 text-gray-800 font-sans">
+    // Menggunakan variabel --app-height yang dinamis, bukan h-screen yang statis
+    <div className="flex flex-col h-[var(--app-height)] bg-gray-50 text-gray-800 font-sans">
       <header className="p-4 text-center border-b border-gray-200 bg-white shadow-sm sticky top-0 z-10">
         <h1 className="text-2xl font-bold text-gray-800">Asisten AI Cerdas</h1>
       </header>
@@ -260,4 +276,5 @@ export default function App() {
     </div>
   );
 }
+
 
