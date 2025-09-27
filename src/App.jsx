@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 
 // Komponen utama aplikasi
 export default function App() {
-  // --- State Management ---
+  // --- State Management (Tidak ada perubahan) ---
   const [messages, setMessages] = useState([
-    { role: 'model', text: 'Halo! Saya adalah asisten AI yang didukung oleh Gemini. Apa yang bisa saya bantu hari ini?' }
+    { role: 'model', text: 'Halo! Saya adalah asisten AI dengan antarmuka baru. Silakan ajukan pertanyaan Anda.' }
   ]);
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -13,9 +13,7 @@ export default function App() {
   const [showApiModal, setShowApiModal] = useState(false);
   const chatEndRef = useRef(null);
 
-  // --- Efek Samping ---
-
-  // Efek untuk cek API Key dari localStorage dan setup PWA
+  // --- Efek Samping (Tidak ada perubahan) ---
   useEffect(() => {
     const storedApiKey = localStorage.getItem('gemini-api-key');
     if (storedApiKey) {
@@ -57,7 +55,6 @@ export default function App() {
     }
   }, []);
 
-  // Efek untuk auto-scroll ke pesan terbaru
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
@@ -71,19 +68,17 @@ export default function App() {
       return;
     }
     setError(null);
-
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
     const payload = {
       contents: [{ parts: [{ text: prompt }] }],
       systemInstruction: { parts: [{ text: "Kamu adalah Ai Asisten yang Profesional dan handal serta friendly seperti manusia" }] },
       tools: [{ "google_search": {} }],
     };
-
     try {
       const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`); }
       const data = await response.json();
-      const modelResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      const modelResponse = data.candidates?.[0]?.content?.parts?[0]?.text;
       if (modelResponse) { setMessages(prev => [...prev, { role: 'model', text: modelResponse }]); } 
       else { throw new Error("Gagal mendapatkan respons dari model."); }
     } catch (e) {
@@ -137,19 +132,17 @@ export default function App() {
     );
   };
 
-  // --- Render (Perubahan di sini) ---
+  // --- Render (Struktur Layout Baru) ---
   return (
-    // Kita tetap menggunakan flex-col di sini
-    <div className="font-sans h-screen w-screen bg-gray-100 flex flex-col antialiased">
+    <div className="font-sans h-full w-full bg-gray-100 grid grid-rows-[auto_1fr_auto] antialiased">
       {showApiModal && <ApiKeyModal />}
 
-      {/* PERUBAHAN 1: Mengubah `fixed` menjadi `sticky` */}
-      <header className="sticky top-0 bg-white/80 backdrop-blur-lg border-b border-gray-200 p-4 shadow-sm z-10">
+      <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200 p-4 shadow-sm z-10">
         <h1 className="text-xl md:text-2xl font-bold text-gray-800 text-center">Asisten AI Gemini</h1>
       </header>
 
-      {/* PERUBAHAN 2: Menghapus padding atas/bawah dan membiarkan area ini tumbuh */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-6">
+      {/* Ini adalah area yang bisa di-scroll */}
+      <main className="overflow-y-auto p-4 md:p-6 smooth-scroll">
         <div className="max-w-4xl mx-auto space-y-4">
           {messages.map((msg, index) => (<MessageBubble key={index} message={msg} />))}
           {isLoading && (
@@ -165,8 +158,8 @@ export default function App() {
         </div>
       </main>
 
-      {/* PERUBAHAN 3: Mengubah `fixed` menjadi `sticky` */}
-      <footer className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-4 md:p-6 border-t border-gray-200 z-10">
+      {/* Footer ini sekarang terkunci di bagian bawah grid */}
+      <footer className="bg-white/80 backdrop-blur-lg p-4 md:p-6 border-t border-gray-200 z-10">
         <form onSubmit={handleSendMessage} className="max-w-4xl mx-auto">
           <div className="relative flex items-center">
             <input type="text" value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder={!apiKey ? "Masukkan API Key terlebih dahulu..." : (isLoading ? "Sedang menunggu respons..." : "Ketik pesan Anda...")} className="flex-1 w-full px-5 py-3 pr-14 bg-gray-100 border border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition" disabled={isLoading || !apiKey}/>

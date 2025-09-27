@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* PERUBAHAN: Mencegah 'bounce' scroll di seluruh halaman */
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* PERUBAHAN: Menambahkan scroll yang mulus untuk iOS */
+.smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
