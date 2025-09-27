@@ -59,7 +59,7 @@ export default function App() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  // --- Logika Inti (Tidak ada perubahan) ---
+  // --- Logika Inti ---
   const callGeminiAPI = async (prompt) => {
     if (!apiKey) {
       setError("API Key tidak ditemukan. Silakan masukkan API Key Anda.");
@@ -78,9 +78,18 @@ export default function App() {
       const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`); }
       const data = await response.json();
-      const modelResponse = data.candidates?.[0]?.content?.parts?[0]?.text;
-      if (modelResponse) { setMessages(prev => [...prev, { role: 'model', text: modelResponse }]); } 
-      else { throw new Error("Gagal mendapatkan respons dari model."); }
+
+      // --- PERBAIKAN DI SINI ---
+      // Mengurai respons dengan cara yang lebih aman untuk build tool
+      const candidate = data.candidates && data.candidates[0];
+      const modelResponse = candidate?.content?.parts?.[0]?.text;
+
+      if (modelResponse) { 
+        setMessages(prev => [...prev, { role: 'model', text: modelResponse }]); 
+      } else { 
+        console.error("Struktur respons tidak valid:", data);
+        throw new Error("Gagal mendapatkan teks respons dari model."); 
+      }
     } catch (e) {
       console.error(e);
       setError(`Terjadi kesalahan: ${e.message}`);
@@ -164,7 +173,7 @@ export default function App() {
           <div className="relative flex items-center">
             <input type="text" value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder={!apiKey ? "Masukkan API Key terlebih dahulu..." : (isLoading ? "Sedang menunggu respons..." : "Ketik pesan Anda...")} className="flex-1 w-full px-5 py-3 pr-14 bg-gray-100 border border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition" disabled={isLoading || !apiKey}/>
             <button type="submit" disabled={isLoading || !userInput.trim() || !apiKey} className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-blue-600 text-white rounded-full p-2 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform rotate-90" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform rotate-90" viewBox="http://www.w3.org/2000/svg" className="h-5 w-5 transform rotate-90" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
             </button>
           </div>
         </form>
