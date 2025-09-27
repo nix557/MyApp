@@ -75,7 +75,7 @@ const ChatBubble = ({ role, text, isLoading = false }) => {
 // Komponen untuk input API Key
 const ApiKeyInput = ({ tempApiKey, setTempApiKey, handleApiKeySubmit }) => {
   return (
-    <div className="font-sans h-screen w-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="font-sans flex-grow w-full bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-6">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800">Masukkan Kunci API Gemini</h2>
@@ -227,54 +227,53 @@ export default function App() {
     callGeminiAPI(updatedHistory);
   };
 
-  if (!isApiKeySet) {
-    return (
-      <ApiKeyInput 
-        tempApiKey={tempApiKey}
-        setTempApiKey={setTempApiKey}
-        handleApiKeySubmit={handleApiKeySubmit}
-      />
-    );
-  }
-
   return (
     // Menggunakan variabel --app-height yang dinamis, bukan h-screen yang statis
     <div className="flex flex-col h-[var(--app-height)] bg-gray-50 text-gray-800 font-sans">
-      <header className="p-4 text-center border-b border-gray-200 bg-white shadow-sm sticky top-0 z-10">
-        <h1 className="text-2xl font-bold text-gray-800">Asisten AI Cerdas</h1>
-      </header>
+      {!isApiKeySet ? (
+        <ApiKeyInput 
+          tempApiKey={tempApiKey}
+          setTempApiKey={setTempApiKey}
+          handleApiKeySubmit={handleApiKeySubmit}
+        />
+      ) : (
+        <>
+          <header className="p-4 text-center border-b border-gray-200 bg-white shadow-sm sticky top-0 z-10">
+            <h1 className="text-2xl font-bold text-gray-800">Asisten AI Cerdas</h1>
+          </header>
 
-      <main className="flex-grow p-4 overflow-y-auto pb-32">
-        {chatHistory.map((chat, index) => (
-          <ChatBubble key={index} role={chat.role} text={chat.text} />
-        ))}
-        {isLoading && <ChatBubble role="model" isLoading={true} />}
-        <div ref={chatEndRef} /> 
-      </main>
+          <main className="flex-grow p-4 overflow-y-auto pb-32">
+            {chatHistory.map((chat, index) => (
+              <ChatBubble key={index} role={chat.role} text={chat.text} />
+            ))}
+            {isLoading && <ChatBubble role="model" isLoading={true} />}
+            <div ref={chatEndRef} /> 
+          </main>
 
-      <div className="fixed bottom-0 left-0 right-0 w-full p-4 bg-white border-t border-gray-200 z-50">
-        <form onSubmit={handleSubmit} className="flex items-center space-x-4 max-w-4xl mx-auto">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ketik pesan Anda..."
-            className="flex-grow px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow disabled:bg-gray-100"
-            disabled={isLoading}
-            autoFocus
-            style={{ WebkitUserSelect: 'text' }}
-          />
-          <button
-            type="submit"
-            className="bg-blue-600 text-white rounded-full p-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300 transition-all duration-200"
-            disabled={isLoading || !input.trim()}
-          >
-            <SendIcon />
-          </button>
-        </form>
-      </div>
+          <div className="fixed bottom-0 left-0 right-0 w-full p-4 bg-white border-t border-gray-200 z-50">
+            <form onSubmit={handleSubmit} className="flex items-center space-x-4 max-w-4xl mx-auto">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ketik pesan Anda..."
+                className="flex-grow px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow disabled:bg-gray-100"
+                disabled={isLoading}
+                autoFocus
+                style={{ WebkitUserSelect: 'text' }}
+              />
+              <button
+                type="submit"
+                className="bg-blue-600 text-white rounded-full p-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300 transition-all duration-200"
+                disabled={isLoading || !input.trim()}
+              >
+                <SendIcon />
+              </button>
+            </form>
+          </div>
+        </>
+      )}
     </div>
   );
 }
-
 
